@@ -11,7 +11,7 @@ Usage
 
 To use esp run the following command on CentOS/CL 6 or 7:
 
-# source /dev/stdin <<< "$(curl -sL https://esp.cpanel.xyz/esp)"
+# source /dev/stdin <<< "$(curl -sL [NEW_URL])"
 
 Special Thanks to Jerald Jonson for initially coding and hacking out the CentOS 5 bugs in the above source command that makes this tool possible, and his contributions to the ESP script itself.
 
@@ -24,7 +24,7 @@ Configuration options in ESP are bash environment variables declared before the 
 
 Example:
 
-# ssp=1 source /dev/stdin <<< "$(curl -sL https://esp.cpanel.xyz/esp)"
+# ssp=1 source /dev/stdin <<< "$(curl -sL [NEW_URL])"
 
 ### SSP 
 
@@ -135,7 +135,7 @@ function esp_hook_pre { [ -f ~/.esprc ] && source ~/.esprc;};
 
 Now you can run ESP and ESP will detect the hook and load ~/.esprc if it exists.  Additionally, you can combine the function, with configuration options and the ESP command for an (admittedly large) one liner. 
 
-export esp_check_disable_mysql=1 function esp_hook_pre { [ -f ~/.esprc ] && source ~/.esprc;}; source /dev/stdin <<< "$(curl -sL https://esp.cpanel.xyz/esp)"
+export esp_check_disable_mysql=1 function esp_hook_pre { [ -f ~/.esprc ] && source ~/.esprc;}; source /dev/stdin <<< "$(curl -sL [NEW_URL])"
 
 ### Post-ESP hook 
 
@@ -151,7 +151,7 @@ function esp_hook_post { export PS1="$PS1 >>>"; };
 
 Like the pre hook you can place the function before the esp command for an one liner:
 
-function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <<< "$(curl -sL https://esp.cpanel.xyz/esp)"
+function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <<< "$(curl -sL [NEW_URL])"
 
 
 Credits
