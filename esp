@@ -3,7 +3,7 @@
 
 # ESP - Enhanced Shell Prompt
 # Created by Citizen Kepler
-# Maintained by Terrance Robotham
+# Maintained by Ricky Grassmuck, Ausaf Lateef
 # https://github.com/cPanelTechs/ESP
 # vim: ts=4 sw=4 syn=sh et
 
@@ -11,7 +11,7 @@
 # shellcheck disable=SC2039,SC2112,SC2113
 
 # ESP Version
-readonly VERSION='2.0.0'
+readonly VERSION='2.0.1'
 
 # Colors
 readonly END=$(tput sgr0)
