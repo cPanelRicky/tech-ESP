@@ -1099,22 +1099,21 @@ function esp_help_virtfs() {
 # Other and Special Commands
 # --------------------------
 
-alias ssp="curl -sk https://ssp.cpanel.net/SSP/run | sh "
-alias bugreport="curl -sk https://ssp.cpanel.net/run|sh -s -- --bugreport"
+alias ssp="curl -sl https://ssp.cpanel.net/run | sh "
+alias bugreport="curl -sl https://ssp.cpanel.net/run|sh -s -- --bugreport"
 alias csi="esp_script_dl \"csi.pl\" \"https://raw.githubusercontent.com/cPanelTechs/CSI/master/csi.pl\""
 alias ssp-csi="curl -sk https://ssp.cpanel.net/run|sh -s -- --csi"
 alias wo="/usr/local/cpanel/scripts/whoowns"
 alias checkofac="grep -E '\\.(ir|mm|cu|sd|sy):' /etc/userdomains"
 alias ccrpms="/usr/local/cpanel/scripts/check_cpanel_rpms"
 alias fdrpms="/usr/local/cpanel/scripts/autorepair fix_duplicate_cpanel_rpms"
-alias uploadvt="esp_script_dl \"uploadvt\" \"https://utils.cpanel.xyz/uploadvt\""
-alias cpdoctor="esp_script_dl \"cpdoctor.sh\" \"https://cpdoctor.cpanel.xyz/cpdoctor.sh\""
+#alias uploadvt="esp_script_dl \"uploadvt\" \"https://utils.cpanel.xyz/uploadvt\""
+#alias cpdoctor="esp_script_dl \"cpdoctor.sh\" \"https://cpdoctor.cpanel.xyz/cpdoctor.sh\""
 alias clicensets="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://raw.githubusercontent.com/cPanelInc/tech-cp_license_troubleshooter/master/cplicensets)"
-alias bdnserial="esp_script_dl \"updateserial.pl\" \"https://scripts.cpanel.xyz/updateserial.pl\""
-alias cpscan="esp_script_dl \"scan\" \"https://scan.cpanel.xyz/scripts/scan\""
+#alias bdnserial="esp_script_dl \"updateserial.pl\" \"https://scripts.cpanel.xyz/updateserial.pl\""
+#alias cpscan="esp_script_dl \"scan\" \"https://scan.cpanel.xyz/scripts/scan\""
 alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
 alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
-#alias createreseller="function _cr() { awk 'BEGIN {FS=\".\"} {print $4}'`; export RANDPASS=$(/usr/local/cpanel/3rdparty/bin/perl -MCpanel::PasswdStrength::Generate -e 'print Cpanel::PasswdStrength::Generate::generate_password(14)'); export TEMPUSER=\"cp\"$TICKET\"cptech\"; echo \"$TEMPUSER $RANDPASS\" && echo && /usr/local/cpanel/scripts/autorepair create_temp_reseller_for_ticket_access; }; _cr;";"` }"
 alias vtcheck="/usr/bin/perl <(curl -s https://cpaneltech.ninja/cptech/virustotalchk)"
 alias cpversion="cat /usr/local/cpanel/version"
 alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/last"
@@ -1307,12 +1306,12 @@ function xscreen() {
 	fi
 }
 
-alias ncpaste="nc nc.cpanel.xyz 9988"
+#alias ncpaste="nc nc.cpanel.xyz 9988"
 
-function b64ncpaste() {
-	FILE="${1}"
-	b64-encdump "${FILE}"|nc nc.cpanel.xyz 9988
-}
+#function b64ncpaste() {
+#	FILE="${1}"
+#	b64-encdump "${FILE}"|nc nc.cpanel.xyz 9988
+#}
 
 function pastebin () {
 	DATA=$(cat -)
