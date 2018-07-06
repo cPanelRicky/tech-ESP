@@ -809,7 +809,7 @@ function esp_help_net() {
 # ------------------
 
 function acctinfo() {
-    if [[ ! -e ${DL_SCRIPTS}/acctinfo ]];
+    if [[ ! -e ${DL_SCRIPTS}/acctinfo ]]; then
         esp_script_dl "acctinfo" "https://raw.githubusercontent.com/cPanelInc/tech-acctinfo/master/acctinfo"
     fi
 
