@@ -1,11 +1,12 @@
 #!/bin/bash
+
 # shellcheck shell=sh
+# vim: ts=4 sw=4 syn=sh et
 
 # ESP - Enhanced Shell Prompt
 # Created by Citizen Kepler
 # Maintained by Ricky Grassmuck, Ausaf Lateef
 # https://github.com/cPanelTechs/ESP
-# vim: ts=4 sw=4 syn=sh et
 
 # Shellcheck Global POSIX ignores
 # shellcheck disable=SC2039,SC2112,SC2113
@@ -1274,7 +1275,7 @@ function oddthings () {
 }
 
 function showips() {
-	ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk -F':' "{'printf ("%5s: %s'\n'"), $1, $2'}" | sort -V |sed 's/^ *//g' | cut -d' ' -f1-3
+    ifconfig | awk '/127\./ { next; } /inet /{ print $2 }'
 }
 
 function docroot() {
@@ -1331,63 +1332,6 @@ function gendcv() {
 }
 
 # shellcheck disable=2181
-function xscreen() {
-	if [[ "${#}" -lt 2 ]]; then
-		echo "Too few parameters, need both a NAME and COMMAND arguments";
-	elif [[ "${#}" -ge 3 ]]; then
-		echo "Too many arguments! Please quote your command if it contains flags or arguments"
-		echo "Extra Arguments Passed:"
-
-		for arg in "${@:3}"; do
-			echo "${arg}";
-		done
-	else
-		SOCK_NAME="${1}";
-		COMMAND="${2}";
-		screen -dmS "${SOCK_NAME}"
-		if [[ $? != 0 ]]; then
-			echo "Failed to create screen session, socket: ${SOCK_NAME} already exists.";
-		else
-			screen -S "${SOCK_NAME}" -X stuff "${COMMAND}";
-			# I fixed it - TJR 02112017 >> "; # The newline here is necessary, dont "fix" it
-			screen -ls;
-		fi
-	fi
-}
-
-#alias ncpaste="nc nc.cpanel.xyz 9988"
-
-#function b64ncpaste() {
-#	FILE="${1}"
-#	b64-encdump "${FILE}"|nc nc.cpanel.xyz 9988
-#}
-
-function pastebin () {
-	DATA=$(cat -)
-
-	PASTE_URL="https://p.cpanel.xyz/api/create?apikey=B7wyLcQv7NHFnmn5g657"
-
-	TITLE="${TECH}-$(hostname) $(date +'%Y-%m-%d')"
-	RESULT=$(echo "${DATA}" | curl -s -d private=1 -d title="${TITLE}" --data-urlencode text@- "${PASTE_URL}")
-	RESULT=$(echo "${RESULT}" | sed -e 's/\/view\//\/view\/raw\//')
-
-
-	# shellcheck disable=SC1001
-	if [[ $RESULT =~ .*p\.cpanel\.xyz\/.* ]]
-	then
-		echo -e "\\nPaste available at ${RESULT}\\n"
-	else
-		echo -e "\\nFailed to create pastebin. Site returned:"
-		echo "----------"
-		echo -e "${RESULT}\\n"
-	fi
-}
-
-function b64paste() {
-	FILE="${1}"
-	b64-encdump "${FILE}"|pastebin
-}
-
 function transfer() {
 	if [ $# -eq 0 ]
 	then
@@ -1494,23 +1438,6 @@ function esp_help_other() {
 	help_command "strace-httpd" "Runs a strace against httpd."
 }
 
-function h4tf() {
-	DATE=$(date +%F)
-	IP=$(hostname -i)
-	if [ -z "${TICKET}" ]; then
-		echo "Ticket number not detected via HISTFILE"
-	else
-		echo "Ticket number is ${TICKET}"
-		touch /usr/share/doc/.cp."${TECH}"."${DATE}"_"${IP}"_"${TICKET}"
-		stat /usr/share/doc/.cp*
-	fi
-}
-
-function esp_help_L3() {
-	help_section "L3 Only"
-	help_command "h4tf" "Create hacked server touchfile"
-}
-
 #
 # Functions to assist with displaying the help section
 # ----------------------------------------------------
@@ -1601,9 +1528,9 @@ echo -ne "${TPROMPT}cPTKT ${TICKET} - ESP${TENDPROMPT}"
 
 save_connected
 
-# if [ "$ssp" == "1" ]; then
-#	ssp
-# fi
+if [ "${SSP}" == "1" ]; then
+    ssp
+fi
 
 #
 # ESP hook for Post Startup
