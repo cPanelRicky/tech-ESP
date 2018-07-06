@@ -513,8 +513,14 @@ function save_connected() {
 # Misc. Utilities
 # ---------------
 
-# shellcheck disable=SC2139
-alias get_jq="wget -nc -q -O ${DL_SCRIPTS}/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x ${DL_SCRIPTS}/jq"
+function jq() {
+    if [[ ! -e ${DL_SCRIPTS}/jq ]]; then
+        esp_script_dl "jq" "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64"
+	mv "${DL_SCRIPTS}/jq-linux64" "${DL_SCRIPTS}/jq"
+    fi
+
+    ${DL_SCRIPTS}/jq ${@}
+}
 
 #
 # WHM / cPanel
