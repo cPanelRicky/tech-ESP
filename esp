@@ -1489,7 +1489,8 @@ function PS1_Alerts() {
 			echo "${MAGENTA}    # dc-apache${YELLOW}"
 			printf "If you continue to see this DANGER ZONE message after\\ndisabling the Apache check it is recommended to\\ndisable all ESP Alert checks with this command:"
 			echo "${MAGENTA}    # dc-all${CYAN}"
-			echo "Please report this issue to Terrance."
+			echo "Please report this issue on github at the link below."
+			echo "https://github.com/cPanelRicky/tech-ESP/issues"
 		else
 			esp_alert_check_no=$(( esp_alert_check_no + 1))
 		fi
