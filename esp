@@ -178,23 +178,6 @@ if [ "$(declare -Ff esp_hook_pre)" == "esp_hook_pre" ]; then
 	esp_hook_pre
 fi
 
-
-#
-# Pre-flight check for cpanel
-#
-
-if [ ! -d /var/cpanel ]; then
-	echo "${YELLOW} .: WARNING WARNING WARNING :."
-	echo "==============================="
-	echo "cPanel has not been detected.  This script has only been tested on cPanel"
-	echo "Please Ctrl-C out of this script in the next 10 seconds otherwise it will run"
-	for time in {10..0}; do
-		echo "Proceeding in $time."
-		sleep 1
-	done
-	echo "Forward March! ${END}"
-fi
-
 #
 # DNS Only Check
 # --------------
