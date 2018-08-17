@@ -1313,7 +1313,6 @@ function esp_help_other() {
     help_command "csi" "Runs CSI"
     help_command "cpscan" "Runs cPScan"
     help_command "cpdoctor" "Runs cpdoctor"
-    help_command "bdnserial" "Bump DNS Serial"
     help_command "fixscreen" "Screen RPM Fixer"
     help_command "compare-mirrors" "cPanel Mirrors compare script"
     help_command "jsonpp" "JSON Pretty Print"
