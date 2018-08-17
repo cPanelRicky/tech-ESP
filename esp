@@ -76,43 +76,12 @@ else
 	readonly TICKET=$(whoami)
 fi
 
-cptechdir=/root/cptechs/${TECH}/${TICKET}
+# New model: create per-ticket directory rather than per analyst?
+# /root/cptechs/1000000/analyst1 /root/cptechs/1000000/analyst2
+cptechdir="/root/cptechs/${TICKET}/${TECH}"
 
 # Create ${cptechdir}
 mkdir -p "${cptechdir}"
-
-# Find our TTY so that $cptechdir can be cleaned up later (likely after exit)
-#auto_clean=1
-owner_tty="$(tty | grep '^/' || echo "$SSH_TTY")"
-if [[ ! "$owner_tty" ]] # Detect TTY in chrooted environments when piping
-then
-	owner_tty="$(lsof /dev/{pts/,tty}* | awk "\$2 == $$ {print \$9; exit}")"
-fi
-
-# Generate session variables
-if [[ -e "$owner_tty" ]]; then
-	tty_ctime="$(stat --printf=%Z  "$owner_tty")"
-	session_name="$(basename "$owner_tty")-$tty_ctime"
-	session_dir="$cptechdir/esp-$session_name"
-	#	#session_log="$session_dir/session.$session_name"
-	#	#esp_pid_file="$session_dir/esp.$session_name"
-else
-	tty_ctime="Not a TTY"
-	session_name="$(basename "$owner_tty")-$tty_ctime"
-	session_dir="$cptechdir/esp-$session_name"
-	#	#session_log=''
-	#	#auto_clean=0
-	#	die "Not a TTY - ESP Disabled!"
-	#	return
-fi
-
-# Create a working directory for this session.
-if [[ ! -d $session_dir ]]; then
-	echo "Creating working dir..."
-	mkdir -p "${session_dir}"
-	# Commented until cleanup is created
-	#echo "[Session Start] $(date)" >> "${session_dir}"/session_active
-fi
 
 ## DO NOT TOUCH ANYTHING BEFORE THIS LINE ##
 
@@ -120,12 +89,6 @@ fi
 # Initial Setup
 # -------------
 #
-
-# Remove Aliases
-unalias -a
-
-# Reset pacha defaults
-alias rm='echo "Are you sure you want to remove files? If so use /bin/rm"'
 
 # Set tech name or fall back to cptech if none specified
 export TECH="${TECH:-cptech}"
