@@ -723,24 +723,6 @@ function esp_help_net() {
 }
 
 #
-# Account Information
-# ------------------
-
-function acctinfo() {
-    if [[ ! -e ${DL_SCRIPTS}/acctinfo ]]; then
-        esp_script_dl "acctinfo" "https://raw.githubusercontent.com/cPanelInc/tech-acctinfo/master/acctinfo"
-    fi
-
-    # shellcheck disable=SC2068
-    ${DL_SCRIPTS}/acctinfo --nocode ${@}
-}
-
-function esp_help_account() {
-    help_section "Account Information"
-    help_command "acctinfo" "Robust Account information script, Args: username/domain --listdbs --listssls q (quiet)"
-}
-
-#
 # SSL
 # ---
 
@@ -1356,7 +1338,6 @@ function cphelp() {
     esp_help_backup
     esp_help_sys-info
     esp_help_net
-    esp_help_account
     esp_help_ssl
     esp_help_AutoSSL
     esp_help_mail
