@@ -1302,8 +1302,6 @@ function esp_help_other() {
     help_command "genpass [num]" "Generate Random Password"
     help_command "getsum <file>" "Generate sums for a file"
     help_command "createsess <user> <service>" "Creates session for user"
-    help_command "vtcheck <file>" "Checks file against VT"
-    help_command "uploadvt <file>" "Uploads file to VT"
     help_command "gendcv <file>" "Generates DCV against CSR file"
     help_command "cpversion" "Print the cPanel version installed on the server"
     help_command "follow-upcp" "Start upcp in the background and tail the log file to follow progress"
