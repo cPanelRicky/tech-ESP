@@ -190,7 +190,8 @@ else
 fi
 
 # Include cPanel paths in $PATH
-export PATH=$PATH:/usr/local/cpanel/scripts/:/usr/local/cpanel/bin/
+# Likely not needed anymore, can confirm tomorrow
+# export PATH=$PATH:/usr/local/cpanel/scripts/:/usr/local/cpanel/bin/
 
 # Simple Alias to ensure color is not always set to on, that can cause issues with less
 alias grep="grep --color=auto "
@@ -464,6 +465,7 @@ function jq() {
 
 #
 # Tweak Settings
+# Credits: William Little
 # -------------
 
 function tweaksettings() {
@@ -634,7 +636,7 @@ function sysinfo() {
     echo "${YELLOW}cPanel Users:${END} ${USERCOUNT}"
 }
 
-# Proudly stolen from William L.
+# Credits to William Little
 function lst() {
     if [[ "$#" -eq 0 ]]; then
         local cwd
@@ -769,21 +771,11 @@ function esp_help_account() {
 
 alias ssl-verify='openssl x509 -noout -text -in'
 
-function sslhunter() {
-    if [[ ! -e ${DL_SCRIPTS}/sslhunter.sh ]]; then
-        esp_script_dl sslhunter.sh "https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/sslhunter.sh"
-    fi
-
-    # shellcheck disable=SC2068
-    ${DL_SCRIPTS}/sslhunter.sh ${@}
-}
-
 function sslshort() { openssl x509 -noout -text -in "$1" | grep -E "Issuer|Subject:|^[ ]*Not"; }
 
 function esp_help_ssl() {
     help_section "SSL"
     help_command "ssl-verify" "Alias for openssl x509 -noout -text -in used to test certs"
-    help_command "sslhunter" "Usage: sslhunter new.cert -or- sslhunter new.cert /path/to/ssl/dir /other/search/path"
     help_command "sslshort" "Brief output of ssl-verify, basically just the output you need."
 }
 
@@ -816,10 +808,10 @@ function autossl-queue() {
         done < <($SQLITECMD -separator ' ' $SQLITE 'SELECT order_item_id,vhost_name FROM requests')
     else
         echo "This server is still using the old JSON queue."
-        echo "Support for this will be added to ESP soon. For now, use:"
-        echo "http://manage2.cpanel.net/certificates.cgi?q=${SERVERIP}&match=origin+ip&from=${PREVMO}&to=${CURMO}&t=&s=pending"
+        echo "Support for this will be added to ESP soon. For now,"
+        echo "manually lookup the certificate in Manage2"
         echo -e "\\n -- OR -- \\n"
-        echo "cat ${JSONFILE} | python -mjson.tool"
+        echo "python -m json.tool ${JSONFILE}"
 
     fi
 }
@@ -846,7 +838,6 @@ function esp_help_AutoSSL() {
 #
 # Exim & Mail
 # -----------
-alias exim-count="exim -bpc"
 
 function rblcheck() {
     if [[ ! -e ${DL_SCRIPTS}/rblcheck ]]; then
@@ -868,7 +859,6 @@ function sse() {
 
 function esp_help_mail() {
     help_section "Exim & Mail"
-    help_command "exim-count" "Displays the number of messages in the exim queue"
     help_command "rblcheck" "Checks common blacklists for listings"
     help_command "sse" "Runs SSE Mail Checker"
 }
@@ -877,13 +867,10 @@ function esp_help_mail() {
 # MySQL
 # -----
 alias mysqlerr='less /var/lib/mysql/$(hostname).err'
-alias mysqltuner="esp_script_dl \"tuning-primer.sh\" \"https://launchpad.net/mysql-tuning-primer/trunk/1.6-r1/+download/tuning-primer.sh\""
-alias mysqltuner2="esp_script_dl \"mysqltuner.pl\" \"https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl\""
+
 function esp_help_mysql() {
     help_section "MySQL & Databases"
     help_command "mysqlerr" "Opens the MySQL error log in less"
-    help_command "mysqltuner" "MySQL Tuning Primer Script < https://launchpad.net/mysql-tuning-primer/ >"
-    help_command "mysqltuner2" "MySQL Tuning Script < http://mysqltuner.pl/ >"
 }
 
 #
@@ -901,7 +888,7 @@ function webstats-probe() {
     ${DL_SCRIPTS}/webstatsprobe.pl ${@}
 }
 
-# Proudly stolen from William L.
+# Credits to William Little
 function create-phpinfo() {
     if [[ "$#" -eq 0 ]]; then
         cwd="$(pwd)"
@@ -972,7 +959,7 @@ function esp_help_PHP_Apache() {
 # ------------
 alias fix-ea4-symlinks="/etc/yum/universal-hooks/multi_pkgs/posttrans/ea-__WILDCARD__/060-setup_apache_symlinks.pl"
 
-# Proudly stolen from William L.
+# Credits to William Little
 function vhostphp() {
     test -f /usr/local/cpanel/bin/whmapi1 || {
         printf >&2 "whmapi1 not found\\n"
@@ -1078,10 +1065,8 @@ alias ssp="curl -sl https://ssp.cpanel.net/run | sh "
 alias bugreport="curl -sl https://ssp.cpanel.net/run|sh -s -- --bugreport"
 alias ssp-csi="curl -sk https://ssp.cpanel.net/run|sh -s -- --csi"
 alias wo="/usr/local/cpanel/scripts/whoowns"
-alias checkofac="grep -E '\\.(ir|mm|cu|sd|sy):' /etc/userdomains"
 alias ccrpms="/usr/local/cpanel/scripts/check_cpanel_rpms"
 alias fdrpms="/usr/local/cpanel/scripts/autorepair fix_duplicate_cpanel_rpms"
-alias clicensets="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://raw.githubusercontent.com/cPanelInc/tech-cp_license_troubleshooter/master/cplicensets)"
 alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
 alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
 alias cpversion="cat /usr/local/cpanel/version"
@@ -1348,7 +1333,6 @@ function esp_help_other() {
     help_command "bugreport" "SSP Bugreport"
     help_command "cphelp" "This Help message"
     help_command "oddthings" "Shows odd things that are running on odd ports"
-    help_command "checkofac" "Check for OFAC TLDs in /etc/userdomains"
     help_command "wo" "Alias for /scripts/whoowns"
     help_command "showips" "Show server IPs"
     help_command "docroot <domain>" "Show docroot for domain"
@@ -1358,7 +1342,6 @@ function esp_help_other() {
     help_command "csi" "Runs CSI"
     help_command "cpscan" "Runs cPScan"
     help_command "cpdoctor" "Runs cpdoctor"
-    help_command "clicensets" "Runs License Troubleshooter"
     help_command "bdnserial" "Bump DNS Serial"
     help_command "tfa" "Pull TFA Keys, cat /var/cpanel/authn/twofactor_auth/tfa_userdata.json to pull secret"
     help_command "fixscreen" "Screen RPM Fixer"
