@@ -806,7 +806,7 @@ function autossl-queue() {
   fi
 
   if [ -f $SQLITE ]; then
-    while IFS= read -r line do
+    while read -r line; do
       OID=$(echo "$line" | awk '{print $1}')
       VHOST=$(echo "$line" | awk '{print $2}')
       echo "Domain: ${VHOST}"
