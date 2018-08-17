@@ -454,7 +454,7 @@ function jq() {
         esp_script_dl "jq" "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64"
         mv "${DL_SCRIPTS}/jq-linux64" "${DL_SCRIPTS}/jq"
     fi
-
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/jq ${@}
 }
 
@@ -754,6 +754,7 @@ function acctinfo() {
         esp_script_dl "acctinfo" "https://raw.githubusercontent.com/cPanelInc/tech-acctinfo/master/acctinfo"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/acctinfo --nocode ${@}
 }
 
@@ -773,6 +774,7 @@ function sslhunter() {
         esp_script_dl sslhunter.sh "https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/sslhunter.sh"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/sslhunter.sh ${@}
 }
 
@@ -799,7 +801,6 @@ function autossl-queue() {
     SERVERIP=$(curl -Ls http://cpanel.net/showip.shtml)
     CURMO=$(date +'%Y-%m-%d')
     PREVMO=$(date --date="$(date +%Y-%m-%d) -1 month" +'%Y-%m-%d')
-    CPSQL='/usr/local/cpanel/3rdparty/bin/sqlite3'
     if [ ! -f $SQLITECMD ]; then
         die "cPanel SQLite Binary not found"
         return 1
@@ -852,6 +853,7 @@ function rblcheck() {
         esp_script_dl rblcheck "https://raw.githubusercontent.com/cPanelPeter/rblcheck/master/rblcheck"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/rblcheck ${@}
 }
 
@@ -860,6 +862,7 @@ function sse() {
         esp_script_dl sse.pl "https://raw.githubusercontent.com/cPanelTechs/SSE/master/sse.pl"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/sse.pl ${@}
 }
 
@@ -894,6 +897,7 @@ function webstats-probe() {
         esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/cPanelTechs/WebStatsProbe/master/webstatsprobe.pl"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/webstatsprobe.pl ${@}
 }
 
@@ -1023,6 +1027,7 @@ function cpmig() {
         esp_script_dl cpmig.sh "https://raw.githubusercontent.com/CpanelInc/cPMigration/PUBLIC/cpmig.sh"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/cpmig.sh ${@}
 }
 
@@ -1088,6 +1093,7 @@ function csi() {
         esp_script_dl csi.pl "https://raw.githubusercontent.com/cPanelTechs/CSI/master/csi.pl"
     fi
 
+    # shellcheck disable=SC2068
     ${DL_SCRIPTS}/csi.pl ${@}
 }
 
