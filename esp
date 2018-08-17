@@ -747,9 +747,6 @@ function autossl-queue() {
     JSONFILE='/var/cpanel/autossl_queue_cpanel.json'
     SQLITE='/var/cpanel/autossl_queue_cpanel.sqlite'
     SQLITECMD='/usr/local/cpanel/3rdparty/bin/sqlite3'
-    SERVERIP=$(curl -Ls http://cpanel.net/showip.shtml)
-    CURMO=$(date +'%Y-%m-%d')
-    PREVMO=$(date --date="$(date +%Y-%m-%d) -1 month" +'%Y-%m-%d')
     if [ ! -f $SQLITECMD ]; then
         die "cPanel SQLite Binary not found"
         return 1
@@ -760,7 +757,7 @@ function autossl-queue() {
             OID=$(echo "$line" | awk '{print $1}')
             VHOST=$(echo "$line" | awk '{print $2}')
             echo "Domain: ${VHOST}"
-            echo "URL: https://manage2.cpanel.net/certificate.cgi?oii=${OID}"
+            echo "Order ID: ${OID}"
             echo -e "=========="
         done < <($SQLITECMD -separator ' ' $SQLITE 'SELECT order_item_id,vhost_name FROM requests')
     else
