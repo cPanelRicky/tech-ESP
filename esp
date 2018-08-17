@@ -1046,7 +1046,6 @@ alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
 alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
 alias cpversion="cat /usr/local/cpanel/version"
 alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/last"
-alias cpsqlite="/usr/local/cpanel/3rdparty/bin/sqlite3"
 
 function csi() {
     if [[ ! -e ${DL_SCRIPTS}/csi.pl ]]; then
