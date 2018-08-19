@@ -934,6 +934,7 @@ function vhostphp() {
 function esp_help_EA4_PHP() {
     help_section "EasyApache 4 PHP Binaries"
     help_command "fix-ea4-symlinks" "Fixes missing EasyApache 4 symlinks"
+    help_command "vhostphp <domain.tld>" "Gets PHP version used by a domain through WHM API1 (no argument returns PHP version used by each VirtualHost"
 }
 
 #
@@ -976,7 +977,7 @@ function esp_migrations() {
     help_section "Migration Tools"
     help_command "cpmig" "cPanel Migration Script"
     help_command "cpeval2" "cpeval2 Migration Script"
-    help_command "updateuserdomains-universal" "Creates Required files for cpeval2"
+    help_command "updateuserdomains-universal" "Creates required files for cpeval2"
 }
 
 #
