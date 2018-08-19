@@ -961,7 +961,7 @@ function esp_help_bash_nav() {
 # Migrations
 # ----------
 
-alias cpeval2="curl -sk https://raw.githubusercontent.com/cPanelTechs/cpeval2/master/cpeval2 | perl"
+alias cpeval2="curl -sk https://raw.githubusercontent.com/CpanelInc/cpeval2/master/cpeval2 | perl"
 alias updateuserdomains-universal="lwp-request http://httpupdate.cpanel.net/cpanelsync/transfers_PUBLIC/pkgacct/ updateuserdomains-universal | perl"
 
 function cpmig() {
