@@ -964,6 +964,7 @@ function esp_help_bash_nav() {
 alias cpeval2="curl -sk https://raw.githubusercontent.com/CpanelInc/cpeval2/master/cpeval2 | perl"
 alias updateuserdomains-universal="lwp-request http://httpupdate.cpanel.net/cpanelsync/transfers_PUBLIC/pkgacct/ updateuserdomains-universal | perl"
 
+# Discuss if this needs to be in here, last commit was 5 years ago
 function cpmig() {
     if [[ ! -e ${DL_SCRIPTS}/cpmig.sh ]]; then
         esp_script_dl cpmig.sh "https://raw.githubusercontent.com/CpanelInc/cPMigration/PUBLIC/cpmig.sh"
