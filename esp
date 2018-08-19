@@ -12,7 +12,7 @@
 # shellcheck disable=SC2039,SC2112,SC2113
 
 # ESP Version
-readonly VERSION='2.0.3'
+readonly VERSION='2.0.4'
 
 # Colors
 readonly END=$(tput sgr0)
