@@ -807,7 +807,7 @@ function rblcheck() {
 
 function sse() {
     if [[ ! -e ${DL_SCRIPTS}/sse.pl ]]; then
-        esp_script_dl sse.pl "https://raw.githubusercontent.com/cPanelTechs/SSE/master/sse.pl"
+        esp_script_dl sse.pl "https://raw.githubusercontent.com/CpanelInc/tech-SSE/master/sse.pl"
     fi
 
     # shellcheck disable=SC2068
