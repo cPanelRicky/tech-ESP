@@ -834,7 +834,8 @@ function esp_help_mysql() {
 # PHP & Apache
 # ---
 alias phpinfo="/usr/local/cpanel/bin/rebuild_phpconf --current"
-alias ea-info="curl -s https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/ea-precheck.sh | sh"
+# Leaving this in since it's good for backup
+alias ea-info="curl -s https://raw.githubusercontent.com/CpanelInc/tech-TechScripts/master/ea-precheck.sh | sh"
 
 function webstats-probe() {
     if [[ ! -e ${DL_SCRIPTS}/webstatsprobe.pl ]]; then
