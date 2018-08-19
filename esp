@@ -498,7 +498,8 @@ function esp_help_tweaksettings() {
 # -------
 
 alias bktxt='date +.cpbak.${TECH}.%F.%T'
-alias backup-report="curl -s --insecure https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/backup_report.sh| sh"
+# Can discuss if needed, already have a separate function that does something similar
+alias backup-report="curl -s --insecure https://raw.githubusercontent.com/CpanelInc/tech-TechScripts/master/backup_report.sh | sh"
 function last-cpbackup() {
     if [ -d /usr/local/cpanel/logs/cpbackup ]; then
         # shellcheck disable=SC1001
