@@ -1018,7 +1018,8 @@ alias wo="/usr/local/cpanel/scripts/whoowns"
 alias ccrpms="/usr/local/cpanel/scripts/check_cpanel_rpms"
 alias fdrpms="/usr/local/cpanel/scripts/autorepair fix_duplicate_cpanel_rpms"
 alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
-alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
+# Link is dead, I have a backup but need discussion on if this is even needed/used
+# alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
 alias cpversion="cat /usr/local/cpanel/version"
 alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/last"
 
