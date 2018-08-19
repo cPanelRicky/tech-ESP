@@ -839,7 +839,7 @@ alias ea-info="curl -s https://raw.githubusercontent.com/CpanelInc/tech-TechScri
 
 function webstats-probe() {
     if [[ ! -e ${DL_SCRIPTS}/webstatsprobe.pl ]]; then
-        esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/cPanelTechs/WebStatsProbe/master/webstatsprobe.pl"
+        esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/CpanelInc/tech-WebStatsProbe/master/webstatsprobe.pl"
     fi
 
     # shellcheck disable=SC2068
