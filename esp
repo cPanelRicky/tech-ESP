@@ -1025,7 +1025,7 @@ alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/
 
 function csi() {
     if [[ ! -e ${DL_SCRIPTS}/csi.pl ]]; then
-        esp_script_dl csi.pl "https://raw.githubusercontent.com/cPanelTechs/CSI/master/csi.pl"
+        esp_script_dl csi.pl "https://raw.githubusercontent.com/CpanelInc/tech-CSI/master/csi.pl"
     fi
 
     # shellcheck disable=SC2068
