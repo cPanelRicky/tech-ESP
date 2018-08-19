@@ -590,6 +590,7 @@ alias cpu-count="grep proc /proc/cpuinfo |wc -l"
 alias cpu-info="grep model\\ name /proc/cpuinfo | sed s/model\\ name//g | uniq -c"
 alias last-upcp="less /var/cpanel/updatelogs/last"
 alias summ-upcp="less /var/cpanel/updatelogs/summary.log"
+# Gonna need to request this be forked into CpanelInc/tech-TechScripts
 alias netspeed="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
 
 function sysinfo() {
