@@ -583,7 +583,7 @@ esp_help_backup() {
 # ------------------
 
 alias server-type="strings /var/cpanel/envtype"
-alias sys-snap-install="wget -O /root/sys-snap.pl https://raw.githubusercontent.com/cPanelTechs/SysSnapv2/master/sys-snap.pl && cd /root/ && chmod 744 sys-snap.pl && perl sys-snap.pl --start"
+alias sys-snap-install="wget -O /root/sys-snap.pl https://raw.githubusercontent.com/CpanelInc/tech-SysSnapv2/master/sys-snap.pl && cd /root/ && chmod 744 sys-snap.pl && perl sys-snap.pl --start"
 # shellcheck disable=SC1117
 alias sys-snap-start="\cd /root && perl sys-snap.pl --start"
 alias cpu-count="grep proc /proc/cpuinfo |wc -l"
