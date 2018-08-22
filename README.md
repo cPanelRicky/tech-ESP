@@ -13,8 +13,6 @@ To use esp run the following command on CentOS/CL 6 or 7:
 
 # source <(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)
 
-Special Thanks to Jerald Jonson for initially coding and hacking out the CentOS 5 bugs in the above source command that makes this tool possible, and his contributions to the ESP script itself.
-
 Configuration Options
 ---------------------
 
@@ -129,11 +127,11 @@ This hook is run at the ESP startup, so if you wanted to run some code on ESP st
 
 An example of the pre hook could be to read ESP configuration options from a file.  ESP currently has no plans on developing this, however it has been requested.  A pre hook can be used to accomplish this.  In the following example we will declare an bash function and then load the configuration from inside this function/hook:
 
-function esp_hook_pre { [ -f ~/.esprc ] && source ~/.esprc;};
+function esp_hook_pre { [[ -f ~/.esprc ]] && source ~/.esprc;};
 
 Now you can run ESP and ESP will detect the hook and load ~/.esprc if it exists.  Additionally, you can combine the function, with configuration options and the ESP command for an (admittedly large) one liner. 
 
-export esp_check_disable_mysql=1 function esp_hook_pre { [ -f ~/.esprc ] && source ~/.esprc;}; source /dev/stdin <<< "$(curl -sL [NEW_URL])"
+export esp_check_disable_mysql=1 function esp_hook_pre { [[ -f ~/.esprc ]] && source ~/.esprc;}; source /dev/stdin <(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)
 
 ### Post-ESP hook 
 
@@ -149,17 +147,17 @@ function esp_hook_post { export PS1="$PS1 >>>"; };
 
 Like the pre hook you can place the function before the esp command for an one liner:
 
-function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <<< "$(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)"
+function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)
 
 
 Credits
 -------
-
-Based on the original ESP written by Citizen Kepler.
 
 Current Maintainers:
 Ausaf Lateef
 Ricky Grassmuck
 
 Previous Contributers:
+Citizen Kepler - Creator
+Jerald Johnson
 Terrance Robotham
