@@ -11,7 +11,7 @@ Usage
 
 To use esp run the following command on CentOS/CL 6 or 7:
 
-# source <(curl -sL [NEW_URL])
+# source <(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)
 
 Special Thanks to Jerald Jonson for initially coding and hacking out the CentOS 5 bugs in the above source command that makes this tool possible, and his contributions to the ESP script itself.
 
@@ -22,7 +22,7 @@ Configuration options in ESP are bash environment variables declared before the 
 
 Example:
 
-# ssp=1 source <(curl -sL [NEW_URL])
+# ssp=1 source <(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)
 
 ### SSP 
 
@@ -149,10 +149,17 @@ function esp_hook_post { export PS1="$PS1 >>>"; };
 
 Like the pre hook you can place the function before the esp command for an one liner:
 
-function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <<< "$(curl -sL [NEW_URL])"
+function esp_hook_post { export PS1="$PS1 >>>"; }; source /dev/stdin <<< "$(curl -sL https://raw.githubusercontent.com/cPanelRicky/ESP/master/esp)"
 
 
 Credits
 -------
 
-Originally coded by Citizen Kepler, and contributions from Jerald Jonson (special thanks for the source command to call the script)
+Based on the original ESP written by Citizen Kepler.
+
+Current Maintainers:
+Ausaf Lateef
+Ricky Grassmuck
+
+Previous Contributers:
+Terrance Robotham
