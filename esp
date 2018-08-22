@@ -12,7 +12,7 @@
 # shellcheck disable=SC2039,SC2112,SC2113
 
 # ESP Version
-readonly VERSION='2.0.3'
+readonly VERSION='2.0.4'
 
 # Colors
 readonly END=$(tput sgr0)
@@ -498,7 +498,8 @@ function esp_help_tweaksettings() {
 # -------
 
 alias bktxt='date +.cpbak.${TECH}.%F.%T'
-alias backup-report="curl -s --insecure https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/backup_report.sh| sh"
+# Can discuss if needed, already have a separate function that does something similar
+alias backup-report="curl -s --insecure https://raw.githubusercontent.com/CpanelInc/tech-TechScripts/master/backup_report.sh | sh"
 function last-cpbackup() {
     if [ -d /usr/local/cpanel/logs/cpbackup ]; then
         # shellcheck disable=SC1001
@@ -582,13 +583,14 @@ esp_help_backup() {
 # ------------------
 
 alias server-type="strings /var/cpanel/envtype"
-alias sys-snap-install="wget -O /root/sys-snap.pl https://raw.githubusercontent.com/cPanelTechs/SysSnapv2/master/sys-snap.pl && cd /root/ && chmod 744 sys-snap.pl && perl sys-snap.pl --start"
+alias sys-snap-install="wget -O /root/sys-snap.pl https://raw.githubusercontent.com/CpanelInc/tech-SysSnapv2/master/sys-snap.pl && cd /root/ && chmod 744 sys-snap.pl && perl sys-snap.pl --start"
 # shellcheck disable=SC1117
 alias sys-snap-start="\cd /root && perl sys-snap.pl --start"
 alias cpu-count="grep proc /proc/cpuinfo |wc -l"
 alias cpu-info="grep model\\ name /proc/cpuinfo | sed s/model\\ name//g | uniq -c"
 alias last-upcp="less /var/cpanel/updatelogs/last"
 alias summ-upcp="less /var/cpanel/updatelogs/summary.log"
+# Gonna need to request this be forked into CpanelInc/tech-TechScripts
 alias netspeed="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
 
 function sysinfo() {
@@ -793,6 +795,7 @@ function esp_help_AutoSSL() {
 # Exim & Mail
 # -----------
 
+# Need to see if Peter can get this added to CpanelInc or if even needs to be in here
 function rblcheck() {
     if [[ ! -e ${DL_SCRIPTS}/rblcheck ]]; then
         esp_script_dl rblcheck "https://raw.githubusercontent.com/cPanelPeter/rblcheck/master/rblcheck"
@@ -804,7 +807,7 @@ function rblcheck() {
 
 function sse() {
     if [[ ! -e ${DL_SCRIPTS}/sse.pl ]]; then
-        esp_script_dl sse.pl "https://raw.githubusercontent.com/cPanelTechs/SSE/master/sse.pl"
+        esp_script_dl sse.pl "https://raw.githubusercontent.com/CpanelInc/tech-SSE/master/sse.pl"
     fi
 
     # shellcheck disable=SC2068
@@ -831,11 +834,12 @@ function esp_help_mysql() {
 # PHP & Apache
 # ---
 alias phpinfo="/usr/local/cpanel/bin/rebuild_phpconf --current"
-alias ea-info="curl -s https://raw.githubusercontent.com/cPanelTechs/TechScripts/master/ea-precheck.sh | sh"
+# Leaving this in since it's good for backup
+alias ea-info="curl -s https://raw.githubusercontent.com/CpanelInc/tech-TechScripts/master/ea-precheck.sh | sh"
 
 function webstats-probe() {
     if [[ ! -e ${DL_SCRIPTS}/webstatsprobe.pl ]]; then
-        esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/cPanelTechs/WebStatsProbe/master/webstatsprobe.pl"
+        esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/CpanelInc/tech-WebStatsProbe/master/webstatsprobe.pl"
     fi
 
     # shellcheck disable=SC2068
@@ -934,6 +938,7 @@ function vhostphp() {
 function esp_help_EA4_PHP() {
     help_section "EasyApache 4 PHP Binaries"
     help_command "fix-ea4-symlinks" "Fixes missing EasyApache 4 symlinks"
+    help_command "vhostphp <domain.tld>" "Gets PHP version used by a domain through WHM API1 (no argument returns PHP version used by each VirtualHost"
 }
 
 #
@@ -960,9 +965,10 @@ function esp_help_bash_nav() {
 # Migrations
 # ----------
 
-alias cpeval2="curl -sk https://raw.githubusercontent.com/cPanelTechs/cpeval2/master/cpeval2 | perl"
+alias cpeval2="curl -sk https://raw.githubusercontent.com/CpanelInc/cpeval2/master/cpeval2 | perl"
 alias updateuserdomains-universal="lwp-request http://httpupdate.cpanel.net/cpanelsync/transfers_PUBLIC/pkgacct/ updateuserdomains-universal | perl"
 
+# Discuss if this needs to be in here, last commit was 5 years ago
 function cpmig() {
     if [[ ! -e ${DL_SCRIPTS}/cpmig.sh ]]; then
         esp_script_dl cpmig.sh "https://raw.githubusercontent.com/CpanelInc/cPMigration/PUBLIC/cpmig.sh"
@@ -976,7 +982,7 @@ function esp_migrations() {
     help_section "Migration Tools"
     help_command "cpmig" "cPanel Migration Script"
     help_command "cpeval2" "cpeval2 Migration Script"
-    help_command "updateuserdomains-universal" "Creates Required files for cpeval2"
+    help_command "updateuserdomains-universal" "Creates required files for cpeval2"
 }
 
 #
@@ -998,17 +1004,11 @@ function virtfs_mount_points() {
     /usr/local/cpanel/3rdparty/bin/perl -MCpanel::Filesys::Virtfs -MData::Dumper -e 'my @blah = Cpanel::Filesys::Virtfs::get_virtfs_mount_points(); foreach (@blah) { $_ =~  /((\/\w+)*\/?)/; print $1."\n"; }'
 }
 
-function virtfs_jailshell_path() {
-    local USER=$1
-    /usr/local/cpanel/3rdparty/bin/perl -MCpanel::Filesys::Virtfs -MData::Dumper -e 'my @blah = Cpanel::Filesys::Virtfs::get_jailshell_path(); foreach (@blah) { $_ =~  /((\/\w+)*\/?)/; print $1."\n"; }'
-}
-
 function esp_help_virtfs() {
     help_section "Various utilities for obtaining virtfs information"
     help_command "virtfs_mounts" "Prints out the currently mounted virtfs mounts."
     help_command "virtfs_exim_deps" "Prints out virtfs exim dependencies"
     help_command "virtfs_mount_points" "Prints out all current virtfs mount points on the server"
-    help_command "virtfs_jailshell_path" "Prints out the current path for jailshell.  This probably won't change much."
 }
 
 #
@@ -1022,13 +1022,14 @@ alias wo="/usr/local/cpanel/scripts/whoowns"
 alias ccrpms="/usr/local/cpanel/scripts/check_cpanel_rpms"
 alias fdrpms="/usr/local/cpanel/scripts/autorepair fix_duplicate_cpanel_rpms"
 alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
-alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
+# Link is dead, I have a backup but need discussion on if this is even needed/used
+# alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
 alias cpversion="cat /usr/local/cpanel/version"
 alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/last"
 
 function csi() {
     if [[ ! -e ${DL_SCRIPTS}/csi.pl ]]; then
-        esp_script_dl csi.pl "https://raw.githubusercontent.com/cPanelTechs/CSI/master/csi.pl"
+        esp_script_dl csi.pl "https://raw.githubusercontent.com/CpanelInc/tech-CSI/master/csi.pl"
     fi
 
     # shellcheck disable=SC2068
@@ -1277,27 +1278,27 @@ function get-requires() {
 
 function esp_help_other() {
     help_section "Other and Special Commands"
-    help_command "save_connected" "saves out the current ssh logins and dismisses the ssh login alert"
+    help_command "save_connected" "saves out the current SSH logins and dismisses the SSH login alert"
     help_command "ssp" "Run SSP"
-    help_command "bugreport" "SSP Bugreport"
-    help_command "cphelp" "This Help message"
+    help_command "bugreport" "SSP bug report template"
+    help_command "cphelp" "This help message"
     help_command "oddthings" "Shows odd things that are running on odd ports"
     help_command "wo" "Alias for /scripts/whoowns"
     help_command "showips" "Show server IPs"
-    help_command "docroot <domain>" "Show docroot for domain"
-    help_command "genaccesshash [user]" "Generate access hash (for optional user)"
+    help_command "docroot <domain>" "Show document root for domain"
+    help_command "genaccesshash <user>" "Generate access hash (for optional user)"
     help_command "ccrpms" "Alias for /scripts/check_cpanel_rpms"
-    help_command "fdrpms" "Fix duplicate RPMs"
+    help_command "fdrpms" "Fix duplicate cPanel RPMs"
     help_command "csi" "Runs CSI"
     help_command "cpscan" "Runs cPScan"
-    help_command "cpdoctor" "Runs cpdoctor"
-    help_command "fixscreen" "Screen RPM Fixer"
-    help_command "compare-mirrors" "cPanel Mirrors compare script"
+    help_command "cpdoctor" "Runs cPDoctor"
+    help_command "fixscreen" "Fix screen permissions/ownership"
+    help_command "compare-mirrors" "cPanel mirrors comparison script"
     help_command "jsonpp" "JSON Pretty Print"
-    help_command "createreseller" "Create cPanel Reseller account"
+    help_command "createreseller" "Create cPanel reseller account"
     help_command "pphist <file>" "PrettyPrint History"
-    help_command "genpass [num]" "Generate Random Password"
-    help_command "getsum <file>" "Generate sums for a file"
+    help_command "genpass <num>" "Generate random Password"
+    help_command "getsum <file>" "Generate hash sums for a file"
     help_command "createsess <user> <service>" "Creates session for user"
     help_command "gendcv <file>" "Generates DCV against CSR file"
     help_command "cpversion" "Print the cPanel version installed on the server"
@@ -1305,11 +1306,11 @@ function esp_help_other() {
     help_command "saroverview" "Show general overview with SAR"
     help_command "xscreen <socket_name> <command>" "Launches a screen session that executes the command provided. Screen session socket name is set with with the name provided"
     help_command "transfer <file>" "Transfers file to transfer.sh"
-    help_command "domain_check" "Runs a curl test on all domains in /etc/userdomains and outputs the results in a table"
+    help_command "domain_check" "Runs a cURL test on all domains in /etc/userdomains and outputs the results in a table"
     help_command "get-requires" "Runs a test to check what packages require the packages passed into the function"
-    help_command "strace-cpsrvd" "Runs a strace against cpsrvd and friends."
-    help_command "strace-phpuser" "Runs a strace against the first PHP process that spawns for user (must be in user's homedir)"
-    help_command "strace-httpd" "Runs a strace against httpd."
+    help_command "strace-cpsrvd" "Runs an strace against cpsrvd and friends."
+    help_command "strace-phpuser" "Runs an strace against the first PHP process that spawns for user (must be in user's homedir)"
+    help_command "strace-httpd" "Runs an strace against httpd."
 }
 
 #
@@ -1343,7 +1344,6 @@ function cphelp() {
     esp_migrations
     esp_help_virtfs
     esp_help_other
-    esp_help_L3
 }
 #
 # Setup some envs for the PS1 prompt
