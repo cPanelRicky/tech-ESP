@@ -1,5 +1,6 @@
 ESP - Enhanced Shell Prompt
 ===========================
+[![pipeline status](https://git.cpanel.net/rigrassm/tech-ESP/badges/master/pipeline.svg)](https://git.cpanel.net/rigrassm/tech-ESP/commits/master)
 
 Intro 
 ----
