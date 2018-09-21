@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# shellcheck shell=sh
 # vim: ts=4 sw=4 syn=sh et
 
 # ESP - Enhanced Shell Prompt
@@ -1122,7 +1121,7 @@ function saroverview() {
             (for i in /proc/[0-9]*; do
                 PROC=${i#/proc/}
                 NAME=$(ps -p "${PROC}" -o comm --no-headers)
-                for SWAP in $(grep Swap "${i}"/smaps 2>/dev/null | awk '{print $2}'); do let SUM=${SUM}+${SWAP}; done
+		for SWAP in $(grep Swap "${i}"/smaps 2>/dev/null | awk '{print $2}'); do (( SUM=SUM+SWAP )); done
                 echo "${PROC} ${NAME} $(echo "scale=2; ${SUM}/1024" | bc)M"
                 SUM=0
             done | grep -Pv '\b0M$' | sort -grk3,3 | head -10)
