@@ -1345,8 +1345,8 @@ export HOSTNAME
 export PS1_IP
 export IP_ADDR
 HOSTNAME=$(hostname -f)
-PS1_IP=$(lsip-real)
-IP_ADDR=$(lsip-real)
+PS1_IP=$(curl -s -4 http://myip.cpanel.net/v1.0)
+IP_ADDR=$(curl -s -4 http://myip.cpanel.net/v1.0)
 
 #
 # Set the functions active in the Prompt
