@@ -20,4 +20,4 @@ source_test:
         - SSP=0
         - export TERM TECH SSP
     script: 
-        - /bin/bash -c 'source esp'
+        - source esp
