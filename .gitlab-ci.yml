@@ -1,11 +1,9 @@
 image: ubuntu:latest
 
 before_script:
-    - apt-get update -y && apt-get install -y wget 
-    - cd /tmp
+    - apt-get update -y && apt-get install -y wget xz-utils
     - wget -O /tmp/shellcheck.tar.xz "https://storage.googleapis.com/shellcheck/shellcheck-latest.linux.x86_64.tar.xz"
     - tar -xvf /tmp/shellcheck.tar.xz
-    - ls /tmp
     - cp /tmp/shellcheck-latest/shellcheck /usr/bin/
 
 shellcheck:
