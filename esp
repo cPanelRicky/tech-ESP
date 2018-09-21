@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# shellcheck shell=sh
 # vim: ts=4 sw=4 syn=sh et
 
 # ESP - Enhanced Shell Prompt
@@ -12,7 +11,7 @@
 # shellcheck disable=SC2039,SC2112,SC2113
 
 # ESP Version
-readonly VERSION='2.0.4'
+readonly VERSION='2.0.5'
 
 # Colors
 readonly END=$(tput sgr0)
@@ -191,7 +190,7 @@ fi
 
 # Include cPanel paths in $PATH
 # Likely not needed anymore, can confirm tomorrow
-# export PATH=$PATH:/usr/local/cpanel/scripts/:/usr/local/cpanel/bin/
+export PATH=$PATH:/usr/local/cpanel/scripts/:/usr/local/cpanel/bin/
 
 # Simple Alias to ensure color is not always set to on, that can cause issues with less
 alias grep="grep --color=auto "
@@ -434,6 +433,13 @@ function jq() {
     ${DL_SCRIPTS}/jq ${@}
 }
 
+# Simple function to check if alias exists.
+# Returns 0 if it does, returns 1 if it doesn't
+function alias_check() {
+    alias "${1}" > /dev/null 2>&1 && return 0;
+    return 1;
+}
+
 #
 # WHM / cPanel
 # ------------
@@ -442,6 +448,11 @@ function jq() {
 # Tweak Settings
 # Credits: William Little
 # -------------
+
+# Check if acctinfo alias is set, if not(like when using a VM), lets just set it.
+if ! alias_check acctinfo; then
+    alias acctinfo='/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://raw.githubusercontent.com/cPanelInc/tech-acctinfo/master/acctinfo)'
+fi
 
 function tweaksettings() {
     if [ "$#" -eq 0 ]; then
@@ -559,6 +570,7 @@ EOF
     done
     unset log err
 }
+
 function backup-destinations() {
     grep -hoP '(?<=^id: ).+' /var/cpanel/backups/*.backup_destination | while read -r i; do /usr/local/cpanel/3rdparty/bin/perl -mCpanel::Backup::Transport -e 'use Data::Dumper; print Dumper(Cpanel::Backup::Transport->new()->get(@ARGV));' "$i"; done
 }
@@ -1109,7 +1121,7 @@ function saroverview() {
             (for i in /proc/[0-9]*; do
                 PROC=${i#/proc/}
                 NAME=$(ps -p "${PROC}" -o comm --no-headers)
-                for SWAP in $(grep Swap "${i}"/smaps 2>/dev/null | awk '{print $2}'); do let SUM=${SUM}+${SWAP}; done
+		for SWAP in $(grep Swap "${i}"/smaps 2>/dev/null | awk '{print $2}'); do (( SUM=SUM+SWAP )); done
                 echo "${PROC} ${NAME} $(echo "scale=2; ${SUM}/1024" | bc)M"
                 SUM=0
             done | grep -Pv '\b0M$' | sort -grk3,3 | head -10)
@@ -1215,25 +1227,6 @@ function gendcv() {
         echo "comodoca.com"
     )" >"${CSRFILE}"
     echo "Created: ${CSRFILE}"
-}
-
-# shellcheck disable=2181
-function transfer() {
-    if [ $# -eq 0 ]; then
-        echo -e "No arguments specified. Usage:\\necho transfer /tmp/test.md\\ncat /tmp/test.md | transfer test.md"
-        return 1
-    fi
-    local tmpfile
-    local basefile
-    tmpfile=$(mktemp -t transferXXX)
-    if tty -s; then
-        basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g')
-        curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >>"${tmpfile}"
-    else
-        curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >>"${tmpfile}"
-    fi
-    cat "${tmpfile}"
-    forceremove "${tmpfile}"
 }
 
 # shellcheck disable=SC2068
