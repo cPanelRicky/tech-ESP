@@ -17,4 +17,4 @@ source_test:
     before_script:
         - TERM=xterm-256color; export TERM
     script: 
-        - source esp
+        - /bin/bash source esp
