@@ -1,0 +1,2 @@
+shellcheck:
+    script: shellcheck esp
