@@ -1,4 +1,4 @@
 image: koalaman/shellcheck
 
 shellcheck:
-    script: "/usr/bin/shellcheck esp"
+    script: shellcheck esp
