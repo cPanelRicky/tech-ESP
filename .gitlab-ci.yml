@@ -15,6 +15,9 @@ source_test:
     tags:
         - source
     before_script:
-        - TERM=xterm-256color; export TERM
+        - TERM=xterm-256color
+        - TECH=r.grassmuck
+        - SSP=0
+        - export TERM TECH SSP
     script: 
         - /bin/bash -c 'source esp'
