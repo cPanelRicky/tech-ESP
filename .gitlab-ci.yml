@@ -1,7 +1,5 @@
-image: alpine:latest
-
-
 shellcheck:
+    image: alpine:latest
     tags:
         - shellcheck
     before_script:
