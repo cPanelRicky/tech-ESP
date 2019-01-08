@@ -65,6 +65,7 @@ export TECH="${TECH:-cptech}"
 
 # Set other defaults
 export STRACESTRLEN="${STRACESTRLEN:-8192}"
+export OS_MAJOR_VER=$(awk -F'=' '/VERSION_ID/ {print substr($2, 2,1)}' /etc/os-release)
 
 # Grab the Ticket number if it exists from the PS1 prompt
 # Dev Note: Don't escape grep since we alias it
@@ -817,13 +818,18 @@ function rblcheck() {
     ${DL_SCRIPTS}/rblcheck ${@}
 }
 
-function sse() {
-    if [[ ! -e ${DL_SCRIPTS}/sse.pl ]]; then
-        esp_script_dl sse.pl "https://raw.githubusercontent.com/CpanelInc/tech-SSE/master/sse.pl"
+function msp() {
+    if [[ ! -e ${DL_SCRIPTS}/msp.pl ]]; then
+        esp_script_dl msp.pl "https://raw.githubusercontent.com/CpanelInc/tech-SSE/master/msp.pl"
     fi
 
     # shellcheck disable=SC2068
-    ${DL_SCRIPTS}/sse.pl ${@}
+    ${DL_SCRIPTS}/msp.pl ${@}
+}
+
+function sse() {
+    echo "sse has been renamed to msp, please use msp going forward"
+    msp "${@}"
 }
 
 function esp_help_mail() {
@@ -1057,9 +1063,7 @@ function pphist() {
 
 function prepare_strace() {
     TSTAMP="$(date '+%Y%m%d-%H%M%S')"
-    TDIR=/root/cptechs/"${TECH}"/strace-"${TSTAMP}"
-
-    mkdir -p "${TDIR}"
+    mkdir -p "${cptechdir}/strace-${TSTAMP}"
     echo "Working Directory: ${TDIR}"
 }
 
@@ -1067,7 +1071,13 @@ function prepare_strace() {
 # shellcheck disable=SC2046
 function strace-cpsrvd() {
     prepare_strace
-    strace -vvttffT -s "${STRACESTRLEN}" -o "${TDIR}"/pid $(pgrep -a 'cpsrv[d]|whostmgr[d]|cpanel[d]|webmail[d]' | grep -E -v 'defunct' | tee "${TDIR}"/process-list.txt | awk '{ printf " -p "  $1; }')
+    if [[ ${OS_MAJOR_VER} == 7 ]]; then
+	local PGREP="pgrep -a" 
+    else
+	local PGREP="pgrep"
+    fi
+
+    strace -vvttffT -s "${STRACESTRLEN}" -o "${TDIR}"/pid $(${PGREP} 'cpsrv[d]|whostmgr[d]|cpanel[d]|webmail[d]' | grep -E -v 'defunct' | tee "${TDIR}"/process-list.txt | awk '{ printf " -p "  $1; }')
 }
 
 # disable 1001 to ignore the regular / warning
@@ -1098,7 +1108,12 @@ function strace-phpuser() {
 # shellcheck disable=SC2046
 function strace-httpd() {
     prepare_strace
-    strace -vvttffT -s "${STRACESTRLEN}" -o "${TDIR}"/pid $(pgrep -a httpd | grep -E -v 'defunct' | tee "${TDIR}"/process-list.txt | awk '{print "-p " $1 }')
+    if [[ ${OS_MAJOR_VER} == 7 ]]; then
+	local PGREP="pgrep -a" 
+    else
+	local PGREP="pgrep"
+    fi
+    strace -vvttffT -s "${STRACESTRLEN}" -o "${TDIR}"/pid $(${PGREP} httpd | grep -E -v 'defunct' | tee "${TDIR}"/process-list.txt | awk '{print "-p " $1 }')
 }
 
 # shellcheck disable=SC2013
@@ -1360,12 +1375,12 @@ function PS1_Alerts() {
     local esp_alert_check_no=0
     local pid_check
     while [ "$(
-        pid_check=$(ps --no-headers -p $esp_echo_pid -o pid)
+        pid_check=$(ps --no-headers -p "${esp_echo_pid}" -o pid)
         if [ -z "$pid_check" ]; then echo "0"; else echo "1"; fi
     )" -eq 1 ]; do
         sleep 0.05
         if [ "$esp_alert_check_no" -gt "$esp_adtempts" ]; then
-            kill $! >/dev/null
+            kill "$!" >/dev/null
             echo "${RED}${BOLD}ESP CRITICAL ERROR!"
             echo -ne "${END}${YELLOW}"
             printf "It appears that the ESP alert checks hung, resultingi\\nin an safety timeout to kill the ESP alert checks to\\nprevent ESP from haning the entire shell.\\n\\nThis issue is often caused when an server is underi\\na DDoS attack causing the Apache check to hang when\\ndownloading the server status.  Please disable the\\nApache check with the following command:"
