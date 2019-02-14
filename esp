@@ -11,7 +11,7 @@
 # shellcheck disable=SC2039,SC2112,SC2113
 
 # ESP Version
-readonly VERSION='2.0.5'
+readonly VERSION='2.0.6'
 
 # Colors
 readonly END=$(tput sgr0)
@@ -65,7 +65,7 @@ export TECH="${TECH:-cptech}"
 
 # Set other defaults
 export STRACESTRLEN="${STRACESTRLEN:-8192}"
-export OS_MAJOR_VER=$(awk -F'=' '/VERSION_ID/ {print substr($2, 2,1)}' /etc/os-release)
+export OS_MAJOR_VER=$(grep -o -P '[5-7]' /etc/redhat-release | head -n1)
 
 # Grab the Ticket number if it exists from the PS1 prompt
 # Dev Note: Don't escape grep since we alias it
@@ -197,16 +197,21 @@ export PATH=$PATH:/usr/local/cpanel/scripts/:/usr/local/cpanel/bin/
 alias grep="grep --color=auto "
 
 #
-# CL on my default
+# List directory contents when changing directories.
 # ----------------
 
 # shellcheck disable=SC2154
-if [ -z "$esp_cl_disable" ]; then
+function enable_auto_dir_listing() {	
     alias cd="cl"
-    [ -z "$esp_cl_maxfiles" ] && export esp_cl_maxfiles=150
-    [ -n "$esp_debug" ] && echo "Enabled CL for CD"
-fi
+    [ -z "$esp_dirlist_maxfiles" ] && export esp_dirlist_maxfiles=150
+    [ -n "$esp_debug" ] && echo "Enabled auto directory content listing"
+}
 
+function disable_auto_dir_listing() {	
+    unalias cd
+    [ -z "$esp_dirlist_maxfiles" ] && export esp_dirlist_maxfiles=150
+    [ -n "$esp_debug" ] && echo "Disabled auto directory content listing"
+}
 #
 # Script Downloader
 # ----------------
@@ -526,12 +531,13 @@ function cl() {
     # shellcheck disable=SC1001
     \cd "$@" || return
     # shellcheck disable=SC1001
-    if [ "$(find . -maxdepth 1 | wc -l)" -lt "${esp_cl_maxfiles}" ]; then
+    if [ "$(find . -maxdepth 1 | wc -l)" -lt "${esp_dirlist_maxfiles}" ]; then
         ls
     else
-        echo "Directory listing disabled due to there being more than ${esp_cl_maxfiles} files to list"
+        echo "Directory listing disabled due to there being more than ${esp_dirlist_maxfiles} files to list"
     fi
 }
+
 function bkc() { cp -pav "$*" "$*$(bktxt)"; }
 function bkm() { mv -v "$*" "$*$(bktxt)"; }
 function b64-encdump() { echo "===" && gzip -c "$1" | base64 && echo "===" && echo "To decode run \"base64 -d <file>|gzip -d\""; }
@@ -1063,7 +1069,8 @@ function pphist() {
 
 function prepare_strace() {
     TSTAMP="$(date '+%Y%m%d-%H%M%S')"
-    mkdir -p "${cptechdir}/strace-${TSTAMP}"
+    TDIR="${cptechdir}/strace-${TSTAMP}"
+    mkdir -p "${TDIR}"
     echo "Working Directory: ${TDIR}"
 }
 
@@ -1412,6 +1419,10 @@ save_connected
 
 if [ "${SSP}" == "1" ]; then
     ssp
+fi
+
+if [[ "$esp_dirlist_enabled" == "1" ]]; then
+    enable_auto_dir_listing
 fi
 
 #
