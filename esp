@@ -65,7 +65,9 @@ export TECH="${TECH:-cptech}"
 
 # Set other defaults
 export STRACESTRLEN="${STRACESTRLEN:-8192}"
-export OS_MAJOR_VER=$(grep -o -P '[5-7]' /etc/redhat-release | head -n1)
+
+OS_MAJOR_VER=$(grep -o -P '[5-7]' /etc/redhat-release | head -n1)
+export OS_MAJOR_VERSION
 
 # Grab the Ticket number if it exists from the PS1 prompt
 # Dev Note: Don't escape grep since we alias it
@@ -1421,7 +1423,7 @@ if [ "${SSP}" == "1" ]; then
     ssp
 fi
 
-if [[ "$esp_dirlist_enabled" == "1" ]]; then
+if [ "${ESP_DIRLIST_ENABLED}" == "1" ]; then
     enable_auto_dir_listing
 fi
 
