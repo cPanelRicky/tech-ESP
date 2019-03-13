@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # vim: ts=4 sw=4 syn=sh et
 
 # ESP - Enhanced Shell Prompt
@@ -604,15 +603,12 @@ esp_help_backup() {
 # ------------------
 
 alias server-type="strings /var/cpanel/envtype"
-alias sys-snap-install="wget -O /root/sys-snap.pl https://raw.githubusercontent.com/CpanelInc/tech-SysSnapv2/master/sys-snap.pl && cd /root/ && chmod 744 sys-snap.pl && perl sys-snap.pl --start"
 # shellcheck disable=SC1117
-alias sys-snap-start="\cd /root && perl sys-snap.pl --start"
 alias cpu-count="grep proc /proc/cpuinfo |wc -l"
 alias cpu-info="grep model\\ name /proc/cpuinfo | sed s/model\\ name//g | uniq -c"
 alias last-upcp="less /var/cpanel/updatelogs/last"
 alias summ-upcp="less /var/cpanel/updatelogs/summary.log"
 # Gonna need to request this be forked into CpanelInc/tech-TechScripts
-alias netspeed="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
 
 function sysinfo() {
     TIER="$(grep -i cpanel= /etc/cpupdate.conf | cut -d'=' -f2)"
@@ -863,6 +859,43 @@ alias phpinfo="/usr/local/cpanel/bin/rebuild_phpconf --current"
 # Leaving this in since it's good for backup
 alias ea-info="curl -s https://raw.githubusercontent.com/CpanelInc/tech-TechScripts/master/ea-precheck.sh | sh"
 
+function add_tmp_lsws_admin_access() {
+	local lsws_dir="/usr/local/lsws/admin"
+	local tmp_pass='cpanel1234'
+	local encrypt_pass
+	local check_access
+
+	encrypt_pass="$(${lsws_dir}/fcgi-bin/admin_php5 -q ${lsws_dir}/misc/htpasswd.php ${tmp_pass} )"
+
+	echo "Backing up original htpasswd"
+	cp -v "${lsws_dir}"/conf/htpasswd "${cptechdir}"/lsws_htpasswd_backup
+	echo ""
+
+	echo "Adding temp credentials to htpasswd"
+	echo "${TECH}:${encrypt_pass}" | tee --append "${lsws_dir}"/conf/htpasswd
+	echo ""
+
+	check_access=$(grep -c "${TECH}" "${lsws_dir}"/conf/htpasswd)
+
+	if [[ "${check_access}" -ge 1 ]]; then
+		echo "Authorized Litespeed Web Admin access"
+		printf "  User: %s\n  Pass: %s\n" "${TECH}" "${tmp_pass}"
+	fi
+}
+
+function del_tmp_lsws_admin_access() {
+	if [[ -f ${cptechdir}/lsws_htpasswd_backup ]]; then
+	
+		printf "\nMoving htpasswd with temp credentials\n\n"
+		mv -v /usr/local/lsws/admin/conf/htpasswd "${cptechdir}"/lsws_tmp_htpasswd-"$(date +%s)" && \
+	                printf "\n\nMoving original htpasswd back.\n\n" && \
+			mv -v "${cptechdir}"/lsws_htpasswd_backup /usr/local/lsws/admin/conf/htpasswd && \
+			printf "\nTemporary admin access removed.\n\n"
+	else
+		echo "${cptechdir}/lsws_htpasswd_backup does not exist and temporary credentials must be manually removed."
+	fi 
+}
+
 function webstats-probe() {
     if [[ ! -e ${DL_SCRIPTS}/webstatsprobe.pl ]]; then
         esp_script_dl webstatsprobe.pl "https://raw.githubusercontent.com/CpanelInc/tech-WebStatsProbe/master/webstatsprobe.pl"
@@ -1048,8 +1081,6 @@ alias wo="/usr/local/cpanel/scripts/whoowns"
 alias ccrpms="/usr/local/cpanel/scripts/check_cpanel_rpms"
 alias fdrpms="/usr/local/cpanel/scripts/autorepair fix_duplicate_cpanel_rpms"
 alias fixscreen="/bin/rpm --setugids screen && rpm --setperms screen"
-# Link is dead, I have a backup but need discussion on if this is even needed/used
-# alias compare-mirrors="/usr/local/cpanel/3rdparty/bin/perl <(curl -s https://cpaneltech.ninja/cptech/compare-mirrors)"
 alias cpversion="cat /usr/local/cpanel/version"
 alias follow-upcp="/scripts/upcp --force --bg && tail -f /var/cpanel/updatelogs/last"
 
