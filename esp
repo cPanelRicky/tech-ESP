@@ -23,6 +23,7 @@ readonly MAGENTA=$(tput setaf 5)
 readonly CYAN=$(tput setaf 6)
 readonly WHITE=$(tput setaf 7)
 
+
 # Set display_ functions
 function display_critical() {
     echo -ne "${RED}${BOLD}$1${END}"
@@ -74,7 +75,7 @@ export OS_MAJOR_VERSION
 if [ "$(echo "${PS1}" | \grep -c "cPs#")" -ge 1 ]; then
     readonly TICKET=$(echo "${PS1}" | awk '{{print $3}}' | cut -d \@ -f 2)
 else
-    readonly TICKET=$(whoami)
+    readonly TICKET="$(whoami)"
 fi
 
 # New model: create per-ticket directory rather than per analyst?
@@ -95,6 +96,9 @@ mkdir -p "${cptechdir}"
 unset VIMINIT
 unset EXINIT
 unset PROMPT_COMMAND
+
+# Trim file path in the prompt
+export PROMPT_DIRTRIM=4
 
 # VIM: Forward March!
 export VIMINIT="${esp_custom_vim:-:set syntax=on}"
@@ -504,6 +508,32 @@ EOF
             fi
         fi
     fi
+}
+
+#
+# Enable/Disable Forkbomb protection
+# ------------
+
+function fork_bomb_protection() {
+    local command=""
+    if [[ "$#" -ne 1 ]]; then
+        echo "Command only takes 1 argument. Either 'enable' or 'disable'."
+        return 1
+    fi
+    case ${1} in
+        enable)
+            command="install_profile"
+            ;;
+        disable)
+            command="remove_profile"
+            ;;
+        *)
+            echo "Invalid Argument: ${1}"
+            return 1;
+            ;;
+        esac
+    
+    /usr/local/cpanel/3rdparty/bin/perl -MCpanel::LoginProfile -le "print [Cpanel::LoginProfile::${command}('limits')]->[1];"
 }
 
 function esp_help_tweaksettings() {
@@ -1396,13 +1426,13 @@ function cphelp() {
 #
 # Setup some envs for the PS1 prompt
 # ----------------------------------
-export HOSTNAME
-export PS1_IP
-export IP_ADDR
 HOSTNAME=$(hostname -f)
 PS1_IP=$(curl -s -4 http://myip.cpanel.net/v1.0)
 IP_ADDR=$(curl -s -4 http://myip.cpanel.net/v1.0)
 
+export HOSTNAME
+export PS1_IP
+export IP_ADDR
 #
 # Set the functions active in the Prompt
 # --------------------------------------
@@ -1435,18 +1465,22 @@ function PS1_Alerts() {
     done
 }
 
-PROMPT1="\\[\\033[31m\\]"
-PROMPT2="\\[\\033[32m\\]"
-PROMPT3="\\[\\033[0m\\]"
-TPROMPT="\\033]0;"
-TENDPROMPT="\\007"
+# set title bar name
+echo -ne "\\033]0;cPTKT ${TICKET} - ESP\\007"
+
+# Enable window size checking
+shopt -s checkwinsize
+
+export PROMPT_COMMAND=set_prompt
 
 # shellcheck disable=SC2181
-if [ -z "${NOPS1}" ]; then
-    PS1="\\n\\[${WHITE}\\][\\[${YELLOW}\\]\\H\\[${WHITE}\\]|\\[${YELLOW}\\]${IP_ADDR}\\[${WHITE}\\]] \\[${CYAN}\\]Alerts: \`PS1_Alerts\`\\n\\[${WHITE}\\][\\[${YELLOW}\\]\\D{%T}\\[${WHITE}\\]]\\[${END}\\] \\[${WHITE}\\][\\[${YELLOW}\\]${TICKET}\\[${WHITE}\\]]\\[${END}\\]$(if [[ $? == "0" ]]; then echo "${PROMPT2}"; else echo "${PROMPT1}"; fi) [$(if (($(pwd | wc -c | tr -d " ") > 18)); then echo "\\w"; else echo "\\w"; fi)]\$${PROMPT3} "
-    export PS1
-fi
-echo -ne "${TPROMPT}cPTKT ${TICKET} - ESP${TENDPROMPT}"
+function set_prompt() {
+	if [ -z "${NOPS1}" ]; then
+	    PS1="\\n\\[${WHITE}\\][\\[${YELLOW}\\]\\H\\[${WHITE}\\]|\\[${YELLOW}\\]${IP_ADDR}\\[${WHITE}\\]] \\[${CYAN}\\][Alerts: $(PS1_Alerts)]\\n\\[${WHITE}\\][\\[${YELLOW}\\]\\D{%T}\\[${WHITE}\\]]\\[${END}\\]\\[${WHITE}\\][\\[${YELLOW}\\]${TICKET}\\[${WHITE}\\]]\\[${END}\\]\\[${WHITE}\\][\\[${GREEN}\\]\\w\\[${WHITE}\\]]\\[${CYAN}\\]\$\\[${END}\\] "
+	    export PS1
+	fi
+}
+
 
 save_connected
 
