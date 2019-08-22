@@ -7,7 +7,7 @@
 # https://github.com/cPanelTechs/ESP
 
 # Shellcheck Global POSIX ignores
-# shellcheck disable=SC2039,SC2112,SC2113
+# shellcheck disable=SC2034,SC2039,SC2112,SC2113
 
 # ESP Version
 readonly VERSION='2.0.6'
